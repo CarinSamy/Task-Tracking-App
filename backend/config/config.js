@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { cleanEnv, str } = require('envalid');
 
 // Validate ALL env variables used below
