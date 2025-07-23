@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import axios from 'axios';
 
 const Register = () => {
@@ -9,18 +8,40 @@ const Register = () => {
     name: '',
     password: '',
   });
+
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(values);
+    setError(null);
+    setSuccess(null);
 
     axios
       .post('http://localhost:8081/auth/register', values)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setSuccess('User registered successfully!');
+        console.log(res.data);
+      })
+      .catch((err) => {
+        if (err.response?.data?.errors) {
+          setError(err.response.data.errors.join(', '));
+        } else if (err.response?.data?.error) {
+          setError(err.response.data.error);
+        } else {
+          setError('Something went wrong.');
+        }
+      });
   };
+
   return (
     <form onSubmit={handleSubmit} className="container mt-5">
-      <label>Email</label>
+      <h2>Register</h2>
+
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
+      {success && <div className="alert alert-success mt-3">{success}</div>}
+
+      <label className="mt-3">Email</label>
       <input
         type="email"
         className="form-control"
@@ -28,6 +49,7 @@ const Register = () => {
         required
         onChange={(e) => setValues({ ...values, email: e.target.value })}
       />
+
       <label className="mt-3">Username</label>
       <input
         type="text"
@@ -36,7 +58,8 @@ const Register = () => {
         required
         onChange={(e) => setValues({ ...values, name: e.target.value })}
       />
-      <label>Password</label>
+
+      <label className="mt-3">Password</label>
       <input
         type="password"
         className="form-control"
@@ -44,10 +67,12 @@ const Register = () => {
         required
         onChange={(e) => setValues({ ...values, password: e.target.value })}
       />
-      <button type="submit" className="btn btn-secondary mt-3">
+
+      <button type="submit" className="btn btn-secondary mt-4">
         Register
       </button>
-      <p className="mt-3">
+
+      <p className="mt-4">
         Already have an account?{' '}
         <Link to="/" className="btn btn-outline-secondary ml-2">
           Login
