@@ -9,24 +9,12 @@ const { User } = require('./models');
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
 
-  try {
-    const hash = await bcrypt.hash(password.toString(), 10);
+const authRoutes = require("./routes/auth");
 
-    const newUser = await User.create({
-      name,
-      email,
-      password: hash,
-    });
+app.use(express.json());
+app.use("/auth", authRoutes);
 
-    return res.json({ Status: 'Success', user: newUser });
-  } catch (err) {
-    console.error('Registration error:', err);
-    return res.status(500).json({ Error: 'Registration failed' });
-  }
-});
 
 const testAPIRoute = require('./api/routes/testAPI.js');
 app.use('/testAPI', testAPIRoute);

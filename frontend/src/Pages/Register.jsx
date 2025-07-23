@@ -14,7 +14,7 @@ const Register = () => {
     console.log(values);
 
     axios
-      .post('http://localhost:8081/register', values)
+      .post('http://localhost:8081/auth/register', values)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };
@@ -25,6 +25,7 @@ const Register = () => {
         type="email"
         className="form-control"
         placeholder="Enter your email"
+        required
         onChange={(e) => setValues({ ...values, email: e.target.value })}
       />
       <label className="mt-3">Username</label>
@@ -32,6 +33,7 @@ const Register = () => {
         type="text"
         className="form-control"
         placeholder="Enter your username"
+        required
         onChange={(e) => setValues({ ...values, name: e.target.value })}
       />
       <label>Password</label>
@@ -39,6 +41,7 @@ const Register = () => {
         type="password"
         className="form-control"
         placeholder="Enter your password"
+        required
         onChange={(e) => setValues({ ...values, password: e.target.value })}
       />
       <button type="submit" className="btn btn-secondary mt-3">
@@ -46,7 +49,7 @@ const Register = () => {
       </button>
       <p className="mt-3">
         Already have an account?{' '}
-        <Link to="/Home" className="btn btn-outline-secondary ml-2">
+        <Link to="/" className="btn btn-outline-secondary ml-2">
           Login
         </Link>
       </p>
