@@ -1,8 +1,9 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
+import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Dashboard from './Pages/Dashboard';
 
 class App extends React.Component {
   constructor(props) {
@@ -24,11 +25,11 @@ class App extends React.Component {
       <div className="App">
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Login />} />
             <Route path="/Register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </Router>
-        <p>{this.state.apiResponse}</p>
       </div>
     );
   }

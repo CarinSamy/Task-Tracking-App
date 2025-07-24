@@ -5,15 +5,19 @@ const db = require('./models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { User } = require('./models');
-
 const app = express();
 app.use(express.json());
 app.use(cors());
+require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
+const dashboardRoutes = require("./routes/dashboard");
+
 
 app.use(express.json());
-app.use("/auth", authRoutes);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 
 const testAPIRoute = require('./api/routes/testAPI.js');
