@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [values, setValues] = useState({
@@ -11,6 +12,7 @@ const Register = () => {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -18,10 +20,13 @@ const Register = () => {
     setSuccess(null);
 
     axios
-      .post('http://localhost:8081/auth/register', values)
+      .post('http://localhost:8081/api/auth/register', values)
       .then((res) => {
         setSuccess('User registered successfully!');
         console.log(res.data);
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
       })
       .catch((err) => {
         if (err.response?.data?.errors) {

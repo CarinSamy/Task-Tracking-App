@@ -1,7 +1,6 @@
 require('dotenv').config();
 const { cleanEnv, str } = require('envalid');
 
-// Validate ALL env variables used below
 const env = cleanEnv(process.env, {
   DEV_DB_USERNAME: str(),
   DEV_DB_PASSWORD: str(),
@@ -17,6 +16,9 @@ const env = cleanEnv(process.env, {
   PROD_DB_PASSWORD: str(),
   PROD_DB_NAME:     str(),
   PROD_DB_HOST:     str(),
+
+  JWT_SECRET:       str(),
+  JWT_EXPIRES_IN:   str()
 });
 
 module.exports = {
@@ -40,11 +42,7 @@ module.exports = {
     database: env.PROD_DB_NAME,
     host:     env.PROD_DB_HOST,
     dialect:  'postgres',
-  }
-};
-
-
-module.exports = {
-  jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
+  },
+  jwtSecret: env.JWT_SECRET,
+  jwtExpiresIn: env.JWT_EXPIRES_IN || '1d',
 };
