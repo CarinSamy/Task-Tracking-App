@@ -8,23 +8,19 @@ const { User } = require('./models');
 const app = express();
 app.use(express.json());
 app.use(cors());
-require("dotenv").config();
+require('dotenv').config();
 
-const authRoutes = require("./routes/auth");
-const dashboardRoutes = require("./routes/dashboard");
-
+const authRoutes = require('./api/routes/auth');
+const dashboardRoutes = require('./api/routes/dashboard');
+const tasks = require('./api/routes/tasks');
 
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/tasks', tasks);
 
 
-const testAPIRoute = require('./api/routes/testAPI.js');
-app.use('/testAPI', testAPIRoute);
-app.get('/', (req, res) => {
-  res.send('Welcome to the Task Tracking App API');
+app.listen(8081, () => {
+  console.log('Server is running on port 8081');
 });
-app.listen(8081,()=> {
-        console.log('Server is running on port 8081');
-    });

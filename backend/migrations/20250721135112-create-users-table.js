@@ -5,29 +5,29 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
       },
       created_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn('NOW'),
       },
       updated_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('users');
-  }
+  },
 };
