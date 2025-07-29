@@ -1,0 +1,12 @@
+#Dependency folders
+node_modules
+build
+dist
+coverage
+
+# Configuration files
+package-lock.json
+yarn.lock
+
+# Public assets
+public

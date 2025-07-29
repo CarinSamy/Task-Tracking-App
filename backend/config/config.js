@@ -1,21 +1,29 @@
-const { cleanEnv, str } = require('envalid');
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
-// Validate ALL env variables used below
+const { cleanEnv, str, port } = require('envalid');
+
 const env = cleanEnv(process.env, {
   DEV_DB_USERNAME: str(),
   DEV_DB_PASSWORD: str(),
-  DEV_DB_NAME:     str(),
-  DEV_DB_HOST:     str(),
+  DEV_DB_NAME: str(),
+  DEV_DB_HOST: str(),
 
   TEST_DB_USERNAME: str(),
   TEST_DB_PASSWORD: str(),
-  TEST_DB_NAME:     str(),
-  TEST_DB_HOST:     str(),
+  TEST_DB_NAME: str(),
+  TEST_DB_HOST: str(),
 
   PROD_DB_USERNAME: str(),
   PROD_DB_PASSWORD: str(),
-  PROD_DB_NAME:     str(),
-  PROD_DB_HOST:     str(),
+  PROD_DB_NAME: str(),
+  PROD_DB_HOST: str(),
+
+  JWT_SECRET: str(),
+  JWT_EXPIRES_IN: str(),
+  NODE_ENV: str({ choices: ['development', 'test', 'production'], default: 'development' }),
+  PORT: port({ default: 8081 }),
 });
 
 module.exports = {
@@ -23,21 +31,26 @@ module.exports = {
     username: env.DEV_DB_USERNAME,
     password: env.DEV_DB_PASSWORD,
     database: env.DEV_DB_NAME,
-    host:     env.DEV_DB_HOST,
-    dialect:  'postgres',
+    host: env.DEV_DB_HOST,
+    dialect: 'postgres',
   },
   test: {
     username: env.TEST_DB_USERNAME,
     password: env.TEST_DB_PASSWORD,
     database: env.TEST_DB_NAME,
-    host:     env.TEST_DB_HOST,
-    dialect:  'postgres',
+    host: env.TEST_DB_HOST,
+    dialect: 'postgres',
   },
   production: {
     username: env.PROD_DB_USERNAME,
     password: env.PROD_DB_PASSWORD,
     database: env.PROD_DB_NAME,
-    host:     env.PROD_DB_HOST,
-    dialect:  'postgres',
-  }
+    host: env.PROD_DB_HOST,
+    dialect: 'postgres',
+  },
+  jwtSecret: env.JWT_SECRET,
+  jwtExpiresIn: env.JWT_EXPIRES_IN || '1d',
+
+  env: env.NODE_ENV,
+  port: env.PORT,
 };

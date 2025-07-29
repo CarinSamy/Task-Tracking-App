@@ -3,46 +3,46 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('tasks', {
       id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
       },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
-          key: 'id'
+          key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
       },
       title: {
         type: Sequelize.STRING(100),
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true
+        allowNull: true,
       },
       status: {
         type: Sequelize.ENUM('To-Do', 'In_Progress', 'Done'),
-        defaultValue: 'TO-DO'
+        defaultValue: 'TO-DO',
       },
       estimate_hours: {
-        type: Sequelize.DECIMAL(5, 2)
+        type: Sequelize.DECIMAL(5, 2),
       },
       created_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn('NOW'),
       },
       updated_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('tasks');
-  }
+  },
 };

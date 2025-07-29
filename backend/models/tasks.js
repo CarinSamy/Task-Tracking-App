@@ -5,50 +5,50 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
       },
       user_id: {
         type: DataTypes.INTEGER,
         references: {
           model: 'users',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       title: {
-          type: DataTypes.STRING(100),
-            allowNull: false,
-          validate: {
-            notEmpty: true,
-        }
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       description: {
-          type: DataTypes.TEXT,
-            allowNull: true,
-          validate: {
-              notEmpty: true,
-          }
+        type: DataTypes.TEXT,
+        allowNull: true,
+        validate: {
+          notEmpty: true,
+        },
       },
       status: {
-        type: DataTypes.STRING(20)
+        type: DataTypes.ENUM('To-Do', 'In_Progress', 'Done'),
+        defaultValue: 'To-Do',
       },
       estimate_hours: {
-        type: DataTypes.DECIMAL(5, 2)
+        type: DataTypes.DECIMAL(5, 2),
       },
       created_at: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-      }
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       tableName: 'tasks',
-      timestamps: true
+      timestamps: true,
     }
   );
 
   Task.associate = (models) => {
-    Task.belongsTo(models.User, { foreignKey: "user_id" });
+    Task.belongsTo(models.User, { foreignKey: 'user_id' });
   };
 
   return Task;
 };
-
