@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.ENUM('To-Do', 'In_Progress', 'Done'),
+        defaultValue: 'To-Do',
       },
       estimate_hours: {
         type: DataTypes.DECIMAL(5, 2),

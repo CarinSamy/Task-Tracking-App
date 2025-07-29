@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useCallback, useEffect } from 'react';
+import api from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -10,65 +10,55 @@ const Dashboard = () => {
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editStatus, setEditStatus] = useState('to-do');
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('token');
-  const authHeader = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  const [userData, setUserData] = useState(null);
-
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    fetch('http://localhost:8081/api/dashboard', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    api
+      .get('/dashboard')
       .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          window.location.href = '/login';
-          throw new Error('Unauthorized');
+        setUserData(res.data.user);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else {
+          console.error(err);
         }
-        return res.json();
-      })
-      .then((data) => {
-        setUserData(data.user);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+      });
+  }, [navigate]);
 
-  const handleAuthError = (err) => {
-    if (err.response && err.response.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-      navigate('/login');
-    } else {
-      console.error(err);
-    }
-  };
+  const handleAuthError = useCallback(
+    (err) => {
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      } else {
+        console.error(err);
+      }
+    },
+    [navigate]
+  );
+
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login', { replace: true }, (window.location.href = '/login'));
+    navigate('/login');
   };
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/api/tasks', authHeader)
+    api
+      .get('/tasks')
       .then((res) => setTasks(res.data))
       .catch(handleAuthError);
-  }, []);
+  }, [handleAuthError, navigate]);
 
   const createTask = () => {
-    axios
-      .post(
-        'http://localhost:8081/api/tasks',
-        { title: newTitle, description: newDescription },
-        authHeader
-      )
+    api
+      .post('/tasks', {
+        title: newTitle,
+        description: newDescription,
+      })
       .then((res) => {
         setTasks([...tasks, res.data]);
         setNewTitle('');
@@ -78,8 +68,8 @@ const Dashboard = () => {
   };
 
   const deleteTask = (id) => {
-    axios
-      .delete(`http://localhost:8081/api/tasks/${id}`, authHeader)
+    api
+      .delete(`/tasks/${id}`)
       .then(() => setTasks(tasks.filter((task) => task.id !== id)))
       .catch(handleAuthError);
   };
@@ -99,16 +89,12 @@ const Dashboard = () => {
   };
 
   const updateTask = () => {
-    axios
-      .put(
-        `http://localhost:8081/api/tasks/${editTask.id}`,
-        {
-          title: editTitle,
-          description: editDescription,
-          status: editStatus,
-        },
-        authHeader
-      )
+    api
+      .put(`/tasks/${editTask.id}`, {
+        title: editTitle,
+        description: editDescription,
+        status: editStatus,
+      })
       .then((res) => {
         setTasks(
           tasks.map((t) => (t.id === editTask.id ? { ...t, ...res.data } : t))

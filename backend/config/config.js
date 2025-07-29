@@ -1,5 +1,8 @@
-require('dotenv').config();
-const { cleanEnv, str } = require('envalid');
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+const { cleanEnv, str, port } = require('envalid');
 
 const env = cleanEnv(process.env, {
   DEV_DB_USERNAME: str(),
@@ -19,6 +22,8 @@ const env = cleanEnv(process.env, {
 
   JWT_SECRET: str(),
   JWT_EXPIRES_IN: str(),
+  NODE_ENV: str({ choices: ['development', 'test', 'production'], default: 'development' }),
+  PORT: port({ default: 8081 }),
 });
 
 module.exports = {
@@ -45,4 +50,7 @@ module.exports = {
   },
   jwtSecret: env.JWT_SECRET,
   jwtExpiresIn: env.JWT_EXPIRES_IN || '1d',
+
+  env: env.NODE_ENV,
+  port: env.PORT,
 };
