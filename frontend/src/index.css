@@ -184,14 +184,14 @@ button {
   font-size: 1rem;
   font-weight: bold;
   padding: 10px 20px;
-  background-color : #0543a1;
+  background-color : #265498;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.5s ease;
 }
 button:hover {
-  background-color:#61dafb ;
+  background-color:#527fc4 ;
 }
 .add-task {
   background-color: rgb(44, 78, 182);
