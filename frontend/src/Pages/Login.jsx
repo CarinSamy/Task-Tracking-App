@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import {
+  faCircleCheck,
+  faCircleXmark,
+} from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Login = () => {
   const [values, setValues] = useState({
     email: '',
@@ -41,14 +45,31 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Login</h2>
+    <div className="Login form-group custom-form">
+      <h1 className="text-2xl text-center font-bold mb-4 text-gray-800">
+        Login
+      </h1>
 
-      {success && <div className="alert alert-success">{success}</div>}
+      {success && (
+        <div className="alert alert-sucess">
+          <FontAwesomeIcon
+            icon={faCircleCheck}
+            style={{ color: 'green', marginRight: '8px' }}
+          />
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="alert alert-danger">
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            style={{ color: 'red', marginRight: '8px' }}
+          />
+          {error}
+        </div>
+      )}
 
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <form className="form-group custom-form" onSubmit={handleSubmit}>
+      <form className="" onSubmit={handleSubmit}>
         <label>Email</label>
         <input
           type="email"

@@ -1,13 +1,367 @@
 body {
-  margin: 0;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(35deg,  #13e8d3, #1e3a8a, #7d3fe0);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 
 code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.Login {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #ffffffb0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top:40%;
+  max-width: 450px;
+  width: 350px;
+  height: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 12px 15px rgba(7, 7, 7, 0.797);
+}
+.logout {
+  color: #1e3a8a;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 20px;
+  padding: 10px;
+  border-radius: 5px; 
+
+}
+.logout:hover {
+  color: #eff2f3a3;
+}
+.Register {
+ font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  background-color: #ffffffb0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top:40%;
+  max-width: 450px;
+  width: 350px;
+  height: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 12px 15px rgba(7, 7, 7, 0.797);
+}
+
+.Task-Tracking-App{
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: aliceblue;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4%;
+  padding: 2%;
+  max-height: 80vh;
+  border-radius: 12px;
+  overflow-y: auto;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.Tasks {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 25px;
+  margin-bottom: 50px;
+  align-items: flex-end;
+  max-width: 900px;
+  margin: 0 auto 50px auto;
+  
+}
+h1 {
+  font-size: 4rem;
+  color: whitesmoke;
+}
+.inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 25px;
+}
+
+.status-completed {
+  background-color: #16a34a;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex: 0.3;
+}
+.status-inprogress {
+  background-color: #38bdf8;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex: 0.3;
+}
+.status-todo {
+  background-color: #64748b;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  flex: 0.3;
+}
+
+.progress-bar-container {
+  width: 170px;
+  margin: 4px 0;
+  display: flex;
+  flex-direction: row;
+  
+}
+.progress-bar {
+  width: 100%;
+  max-width: 170px;
+  height: 18px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex: 1;
+}
+
+.title{
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-decoration:solid;
+  transition: color 0.3s ease;
+  margin-right: 30px;
+  max-width: 50px;
+}
+.title:hover {
+  color: #eff2f3a3;
+  
+}
+
+button {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  background-color : #265498;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+button:hover {
+  background-color:#527fc4 ;
+}
+.add-task {
+  background-color: rgb(44, 78, 182);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 25px;
+  width: auto;
+  height: 40px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1.2rem;
+}
+.add-task:hover {
+  background-color: #477ccb;
+}
+.Delete-task {
+  background-color: #dd2f2f ;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+}
+.Delete-task:hover {
+  background-color: #d2837f;
+  
+}
+.Edit-task {
+  background-color: #13d68b;
+  
+}
+.Edit-task:hover {
+  background-color: #a0e2c8;
+}
+.icons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.inputs, .inputs textarea ,.select{
+  font-size: 1rem;
+  outline:#042961;
+  padding: 10px;
+  border: 1px solid, #0543a1;
+  border-radius: 5px;
+  width: 150px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.112);
+  transition: border-color 0.3s ease, box-shadow 0.3s
+}
+.inputs:focus, .inputs textarea:focus,select:focus {
+  border-color: #0543a1;
+  box-shadow: 0 0 5px rgba(5, 67, 161, 0.5);
+}
+.inputs input:focus{
+  outline: 1px solid #0543a1;
+}
+.inputs button{
+  width: 10px;
+}
+ol{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  outline: rgb(8, 30, 94);
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 6px;
+  color:#f0f0f0;
+  background-color: rgb(16, 92, 154);
+  border:#043379 1px solid;
+  margin-bottom: 1px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 12px 15px rgba(25, 24, 24, 0.224);
+  transform: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+li:hover {
+  background-color: #477ccb;
+  transform: scale(1.04);
+  box-shadow: 0 16px 24px rgba(25, 24, 24, 0.224);
+  z-index: 2;
+}
+.navbar {
+  background-color: #ffffffb6;
+  display: flex;
+  justify-content: center; /* center the inner content */
+  align-items: center;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 0; /* remove extra padding from navbar itself */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  height: 70px;
+}
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  max-width: 1200px;
+  color:#043379;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+.Edit-task, .Delete-task {
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  margin-left: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.edit-input {
+   display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  margin: 20px auto;
+  width: 100%;
+  margin-left: 200px;
+  max-width: 300px; 
+}
+.edit-label {
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 5px;
+  margin-left: 140px;
+  align-self: flex-start
+}
+.edit-buttons {
+  flex-direction: row;
+  justify-content: end;
+  gap: 0px;
+  margin-top: 20px;
+  margin-left: 180px;
+}
+.err {
+  color: #dc2626;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 8px;
+}
+.animated-gradient {
+  background: linear-gradient(-45deg, #07cab7, #1e3a8a, #5fc2e3, #5927a8);
+  background-size: 400% 400%;
+  animation: gradientShift 10s ease infinite;
+
+}
+.animated-gradient:hover {
+  animation-play-state: paused;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
