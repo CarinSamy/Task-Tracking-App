@@ -85,9 +85,10 @@ const TaskDetailsModal = ({ task, onTimeUpdated }) => {
           <div>
             <strong>Remaining Time:</strong>{' '}
             <span style={{ color: '#0e7490' }}>
-              {(
+              {Math.max(
                 Number(task.estimatedHours ?? task.estimate_hours ?? 0) -
-                Number(task.loggedHours ?? task.logged_hours ?? 0)
+                  Number(task.loggedHours ?? task.logged_hours ?? 0),
+                0
               ).toFixed(2)}
             </span>
           </div>

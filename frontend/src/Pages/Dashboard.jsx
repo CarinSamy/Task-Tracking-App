@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import api from '../axiosInstance';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TaskDetailsModal from './Popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +21,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedTask, setSelectedTask] = useState(null);
   const [newEstimatedTime, setNewEstimatedTime] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     api
@@ -62,7 +63,27 @@ const Dashboard = () => {
       .catch(handleAuthError);
   }, [handleAuthError, navigate, setTasks]);
 
-  const createTask = () => {
+  const createTask = (e) => {
+    e.preventDefault();
+    if (
+      !newTitle.trim() ||
+      !parseFloat(newEstimatedTime) ||
+      !newDescription.trim()
+    ) {
+      setError('Title, Description estimate time are required.');
+      return;
+    }
+
+    if (
+      parseFloat(newEstimatedTime) < 0 ||
+      isNaN(parseFloat(newEstimatedTime))
+    ) {
+      setError('Estimated time must be a non-negative number.');
+      return;
+    }
+
+    setError('');
+
     api
       .post('/tasks', {
         title: newTitle,
@@ -105,7 +126,20 @@ const Dashboard = () => {
     setLogged(0);
   };
 
-  const updateTask = () => {
+  const updateTask = (e) => {
+    e.preventDefault();
+    if (!editTitle.trim() || !estimated || !editDescription.trim()) {
+      setError('Title, Description estimate time are required.');
+      return;
+    }
+
+    if (logged < 0) {
+      setError('Logged time cannot be negative.');
+      return;
+    }
+
+    setError('');
+
     api
       .patch(`/tasks/${editTask.id}`, {
         title: editTitle,
@@ -127,9 +161,12 @@ const Dashboard = () => {
     <>
       <nav className="navbar">
         <h1 className="navbar-content">Dashboard</h1>
-        <Link onClick={handleLogout} className="logout">
+        <button
+          onClick={handleLogout}
+          className=" logout bg-transparent text-sm text-blue-700 hover:underline"
+        >
           Logout
-        </Link>
+        </button>
       </nav>
       <div className="Task-Tracking-App">
         {userData && (
@@ -138,96 +175,156 @@ const Dashboard = () => {
           </p>
         )}
         <h2 className="text-lg font-semibold mb-2 text-gray-800">Add Task</h2>
+        <form onSubmit={createTask}>
+          <div className="Tasks flex flex-col space-y-2 mb-4">
+            <input
+              className="inputs p-2 rounded border border-gray-300"
+              placeholder="Title"
+              required
+              value={newTitle}
+              maxLength={10}
+              onChange={(e) => setNewTitle(e.target.value)}
+            />
+            <input
+              className="inputs p-2 rounded border border-gray-300"
+              placeholder="Description"
+              required
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+            />
+            <input
+              className="inputs p-2 rounded border border-gray-300"
+              type="number"
+              placeholder="Estimated Time (e.g. 3h)"
+              required
+              value={newEstimatedTime}
+              onChange={(e) => setNewEstimatedTime(e.target.value)}
+            />
+            <select
+              className="inputs p-2 rounded border border-gray-300 mb-2 w-full"
+              value={newStatus}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="to-do">To-Do</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
 
-        <div className="Tasks flex flex-col space-y-2 mb-4">
-          <input
-            className="inputs p-2 rounded border border-gray-300"
-            placeholder="Title"
-            required
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-          />
-          <input
-            className="inputs p-2 rounded border border-gray-300"
-            placeholder="Description"
-            value={newDescription}
-            onChange={(e) => setNewDescription(e.target.value)}
-          />
-          <input
-            className="inputs p-2 rounded border border-gray-300"
-            type="number"
-            placeholder="Estimated Time (e.g. 3h)"
-            required
-            value={newEstimatedTime}
-            onChange={(e) => setNewEstimatedTime(e.target.value)}
-          />
-          <select
-            className="p-2 rounded border border-gray-300 mb-2 w-full"
-            value={newStatus}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="to-do">To-Do</option>
-            <option value="in progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
-          <button
-            type="submit"
-            className="add-task bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-            onClick={createTask}
-          >
-            Add Task
-          </button>
-        </div>
+            <button
+              type="submit"
+              className="inputs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+            >
+              Add Task
+            </button>
+            {error && (
+              <div className="err text-red-600 text-sm font-medium mb-2 text-center">
+                {error}
+              </div>
+            )}
+          </div>
+        </form>
         <h2 className="text-lg font-semibold mb-2 text-gray-800">Tasks</h2>
         <ol>
           {tasks.map((task) => (
-            <li key={task.id} className=" mt-3">
+            <li key={task.id} className="mt-3">
               {editTask?.id === task.id ? (
-                <>
-                  <input
-                    className="p-2 rounded border border-gray-300 mb-2 w-full"
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                  />
-                  <input
-                    className="p-2 rounded border border-gray-300 mb-2 w-full"
-                    value={editDescription}
-                    onChange={(e) => setEditDescription(e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    value={estimated}
-                    onChange={(e) => setEstimated(parseFloat(e.target.value))}
-                  />
-                  <input
-                    type="number"
-                    value={logged}
-                    onChange={(e) => setLogged(parseFloat(e.target.value))}
-                  />
-                  <select
-                    className="p-2 rounded border border-gray-300 mb-2 w-full"
-                    value={editStatus}
-                    onChange={(e) => setEditStatus(e.target.value)}
-                  >
-                    <option value="to-do">To-Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                  <div className="flex gap-2">
-                    <button
-                      className="bg-green-600 px-3 py-1 rounded text-white"
-                      onClick={updateTask}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="bg-gray-500 px-3 py-1 rounded text-white"
-                      onClick={cancelEditing}
-                    >
-                      Cancel
-                    </button>
+                <div className="space-y-3">
+                  <div>
+                    <label className="edit-label block text-sm text-gray-700 mb-1">
+                      Title
+                    </label>
+                    <input
+                      className="edit-input p-2 rounded border border-gray-300 w-full"
+                      required
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      placeholder="Enter task title"
+                    />
                   </div>
-                </>
+                  <form onSubmit={updateTask}>
+                    <div>
+                      <label className="edit-label block text-sm text-gray-700 mb-1">
+                        Description
+                      </label>
+                      <input
+                        className="edit-input p-2 rounded border border-gray-300 w-full"
+                        required
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        placeholder="Enter task description"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="edit-label block text-sm text-gray-700 mb-1">
+                          Estimated Hours
+                        </label>
+                        <input
+                          type="number"
+                          className="edit-input p-2 rounded border border-gray-300 w-full"
+                          required
+                          value={estimated}
+                          onChange={(e) =>
+                            setEstimated(parseFloat(e.target.value))
+                          }
+                          placeholder="e.g., 5"
+                        />
+                      </div>
+                      <div>
+                        <label className="edit-label block text-sm text-gray-700 mb-1">
+                          Logged Hours
+                        </label>
+                        <input
+                          type="number"
+                          className="edit-input p-2 rounded border border-gray-300 w-full"
+                          required
+                          value={logged}
+                          onChange={(e) =>
+                            setLogged(parseFloat(e.target.value))
+                          }
+                          placeholder="e.g., 3"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="edit-label block text-sm text-gray-700 mb-1">
+                        Status
+                      </label>
+                      <select
+                        className="edit-input p-2 rounded border border-gray-300 w-full"
+                        value={editStatus}
+                        onChange={(e) => setEditStatus(e.target.value)}
+                      >
+                        <option value="to-do">To-Do</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </div>
+
+                    <div className="err flex gap-2 pt-2">
+                      {error && (
+                        <div className="text-red-600 text-sm font-medium mb-2 text-center">
+                          {error}
+                        </div>
+                      )}
+
+                      <button
+                        className="edit-buttons bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
+                        onSubmit={updateTask}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="edit-buttons bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded text-white"
+                        onSubmit={cancelEditing}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
               ) : (
                 <>
                   <strong
@@ -240,7 +337,7 @@ const Dashboard = () => {
                     className={
                       task.status === 'completed'
                         ? 'status-completed'
-                        : task.status === 'in progress'
+                        : task.status === 'in-progress'
                           ? 'status-inprogress'
                           : 'status-todo'
                     }
@@ -248,10 +345,7 @@ const Dashboard = () => {
                   >
                     {task.status}
                   </em>
-                  <div
-                    className="progress-bar-container"
-                    style={{ margin: '8px 0' }}
-                  >
+                  <div className="progress-bar-container my-2">
                     <div
                       className="progress-bar"
                       style={{
@@ -298,7 +392,7 @@ const Dashboard = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-4 mt-1"></div>
+
                   <div className="icons flex gap-2 mt-2">
                     <button
                       className="Edit-task bg-yellow-500 p-2 rounded text-white flex items-center justify-center"
