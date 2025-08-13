@@ -1,13 +1,15 @@
 'use strict';
 
-require('dotenv').config();
+require('dotenv').config(); // ✅ Load .env if needed
+
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+
+const configFile = require(__dirname + '/../config/config.js');
+const env = configFile.env || 'development';
+const config = configFile[env];
 
 const db = {};
 
@@ -22,7 +24,6 @@ if (config.use_env_variable) {
     config
   );
 }
-
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -33,13 +34,18 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
+    const modelPath = path.join(__dirname, file);
+    const modelModule = require(modelPath);
+
+    console.log('Loading model file:', file, '| Exports:', typeof modelModule);
+
+    if (typeof modelModule !== 'function') {
+      throw new Error(`Model file ${file} does not export a function`);
+    }
+
+    const model = modelModule(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
-
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

@@ -26,16 +26,16 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM('To-Do', 'In_Progress', 'Done'),
-        defaultValue: 'TO-DO',
+        defaultValue: 'To-Do',
       },
       estimate_hours: {
         type: Sequelize.DECIMAL(5, 2),
       },
-      created_at: {
+      createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },

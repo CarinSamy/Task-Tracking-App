@@ -31,7 +31,7 @@ module.exports = {
     username: env.DEV_DB_USERNAME,
     password: env.DEV_DB_PASSWORD,
     database: env.DEV_DB_NAME,
-    host: env.DEV_DB_HOST || 'postgres',
+    host: env.DEV_DB_HOST,
     dialect: 'postgres',
   },
   test: {

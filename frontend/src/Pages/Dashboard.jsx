@@ -5,6 +5,7 @@ import TaskDetailsModal from './Popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTasks } from '../reactContext';
+import '../index.css';
 
 const Dashboard = () => {
   const { tasks, setTasks } = useTasks();
@@ -27,7 +28,13 @@ const Dashboard = () => {
     api
       .get('/dashboard')
       .then((res) => {
-        setUserData(res.data.user);
+        console.log('API /dashboard response:', res);
+        if (res.data && res.data.user) {
+          setUserData(res.data.user);
+          console.log('User data set to:', res.data.user);
+        } else {
+          console.warn('No user data found in response:', res.data);
+        }
       })
       .catch((err) => {
         if (err.response?.status === 401 || err.response?.status === 403) {
@@ -50,10 +57,29 @@ const Dashboard = () => {
     },
     [navigate]
   );
+  function normalizeStatus(status) {
+    switch (status.toLowerCase().replace(/_/g, ' ')) {
+      case 'to do':
+      case 'to-do':
+        return 'to-do';
+      case 'in progress':
+        return 'in progress';
+      case 'done':
+      case 'completed':
+        return 'completed';
+      default:
+        return status.toLowerCase();
+    }
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
+  };
+
+  const fetchTasks = async () => {
+    const res = await api.get(`/tasks`);
+    setTasks(res.data);
   };
 
   useEffect(() => {
@@ -97,6 +123,7 @@ const Dashboard = () => {
         setNewDescription('');
         setNewEstimatedTime('');
         setStatus('to-do');
+        fetchTasks();
       })
       .catch(handleAuthError);
   };
@@ -112,7 +139,7 @@ const Dashboard = () => {
     setEditTask(task);
     setEditTitle(task.title);
     setEditDescription(task.description);
-    setEditStatus(task.status);
+    setEditStatus(normalizeStatus(task.status));
     setEstimated(parseFloat(task.estimate_hours) || 0);
     setLogged(task.logged_hours || 0);
   };
@@ -122,7 +149,7 @@ const Dashboard = () => {
     setEditTitle('');
     setEditDescription('');
     setEditStatus('to-do');
-    setEstimated('');
+    setEstimated(0);
     setLogged(0);
   };
 
@@ -169,11 +196,6 @@ const Dashboard = () => {
         </button>
       </nav>
       <div className="Task-Tracking-App">
-        {userData && (
-          <p className="mb-2 text-gray-700 text-center">
-            Welcome, {userData.name}!
-          </p>
-        )}
         <h2 className="text-lg font-semibold mb-2 text-gray-800">Add Task</h2>
         <form onSubmit={createTask}>
           <div className="Tasks flex flex-col space-y-2 mb-4">
@@ -207,7 +229,7 @@ const Dashboard = () => {
             >
               <option value="to-do">To-Do</option>
               <option value="in progress">In Progress</option>
-              <option value="completed">Completed</option>
+              <option value="completed">Done</option>
             </select>
 
             <button
@@ -298,8 +320,8 @@ const Dashboard = () => {
                         onChange={(e) => setEditStatus(e.target.value)}
                       >
                         <option value="to-do">To-Do</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
+                        <option value="in progress">In Progress</option>
+                        <option value="completed">Done</option>
                       </select>
                     </div>
 
@@ -312,13 +334,15 @@ const Dashboard = () => {
 
                       <button
                         className="edit-buttons bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
-                        onSubmit={updateTask}
+                        type="submit"
+                        onClick={updateTask}
                       >
                         Save
                       </button>
                       <button
-                        className="edit-buttons bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded text-white"
-                        onSubmit={cancelEditing}
+                        className="edit-buttons-cancel bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded text-white"
+                        type="button"
+                        onClick={cancelEditing}
                       >
                         Cancel
                       </button>
@@ -335,9 +359,10 @@ const Dashboard = () => {
                   </strong>
                   <em
                     className={
-                      task.status === 'completed'
+                      task.status === 'Done' || task.status === 'completed'
                         ? 'status-completed'
-                        : task.status === 'in-progress'
+                        : task.status === 'in progress' ||
+                            task.status === 'In_Progress'
                           ? 'status-inprogress'
                           : 'status-todo'
                     }
@@ -403,6 +428,7 @@ const Dashboard = () => {
                     </button>
                     <button
                       className="Delete-task bg-red-600 p-2 rounded text-white flex items-center justify-center"
+                      aria-label={`Delete ${task.title}`}
                       onClick={() => deleteTask(task.id)}
                       title="Delete"
                     >

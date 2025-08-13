@@ -24,6 +24,7 @@ const Login = () => {
     axios
       .post('http://localhost:8081/api/auth/login', values)
       .then((res) => {
+        console.log('Response data:', res.data);
         setSuccess(res.data.message || 'User logged in successfully!');
         console.log(res.data);
         const token = res.data.token;
@@ -34,6 +35,7 @@ const Login = () => {
         }, 1500);
       })
       .catch((err) => {
+        console.log('Error response:', err.response?.data);
         if (err.response?.data?.errors) {
           setError(err.response.data.errors.join(', '));
         } else if (err.response?.data?.error) {
@@ -69,17 +71,21 @@ const Login = () => {
         </div>
       )}
 
-      <form className="" onSubmit={handleSubmit}>
-        <label>Email</label>
+      <form className="login" onSubmit={handleSubmit}>
+        <label htmlFor="email">Email</label>
         <input
+          id="email"
           type="email"
           className="form-control"
           placeholder="Enter your email"
           required
           onChange={(e) => setValues({ ...values, email: e.target.value })}
         />
-        <label className="mt-3">Password</label>
+        <label htmlFor="password" className="mt-3">
+          Password
+        </label>
         <input
+          id="password"
           type="password"
           className="form-control"
           placeholder="Enter your password"

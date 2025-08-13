@@ -16,11 +16,15 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      created_at: {
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },

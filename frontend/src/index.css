@@ -29,10 +29,12 @@ code {
   max-width: 450px;
   width: 350px;
   height: 450px;
+  height: auto;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
   border-radius: 12px;
+  transition: height 0.3s ease;
   box-shadow: 0 12px 15px rgba(7, 7, 7, 0.797);
 }
 .logout {
@@ -61,11 +63,13 @@ code {
   margin-top:40%;
   max-width: 450px;
   width: 350px;
-  height: 450px;
+  min-height: 450px; /* Optional: keeps initial height but allows growth */
+  height: auto; 
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
   border-radius: 12px;
+  transition: height 0.3s ease;
   box-shadow: 0 12px 15px rgba(7, 7, 7, 0.797);
 }
 
@@ -100,6 +104,45 @@ h1 {
   font-size: 4rem;
   color: whitesmoke;
 }
+.Login h1{
+  font-size: 2.5rem;
+  color: #214082 !important; 
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.Register h1{
+  font-size: 2.5rem;
+  color: #214082 !important; 
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+div.Task-Tracking-App h2 {
+  font-size: 2rem;
+  color: #214082 !important; 
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.login button {
+  display: block;     
+  margin: 20px auto; 
+  padding: 10px 20px;
+  background-color: #1e3a8a;
+  color: white;
+
+}
+.Register button {
+  display: block;     
+  margin: 20px auto; 
+  padding: 10px 20px;
+  background-color: #1e3a8a;
+  color: white;
+   
+}
+
 .inputs {
   display: flex;
   flex-direction: column;
@@ -107,7 +150,7 @@ h1 {
   margin-right: 25px;
 }
 
-.status-completed {
+.Done, .status-completed {
   background-color: #16a34a;
   color: #fff;
   padding: 2px 10px;
@@ -205,6 +248,16 @@ button:hover {
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 1.2rem;
+}
+.btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .add-task:hover {
   background-color: #477ccb;
@@ -332,12 +385,20 @@ li:hover {
   margin-left: 140px;
   align-self: flex-start
 }
-.edit-buttons {
+.edit-buttons,.edit-buttons-cancel {
   flex-direction: row;
   justify-content: end;
   gap: 0px;
   margin-top: 20px;
   margin-left: 180px;
+}
+.edit-buttons-cancel{
+  background-color: #5d666b;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 .err {
   color: #dc2626;
