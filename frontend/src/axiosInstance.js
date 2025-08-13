@@ -1,8 +1,12 @@
+// src/axiosInstance.js
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8081/api',
-});
+const baseURL =
+  process.env.NODE_ENV === 'test'
+    ? 'http://localhost'
+    : 'http://localhost:8081/api';
+
+const api = axios.create({ baseURL });
 
 api.interceptors.request.use(
   (config) => {
@@ -18,10 +22,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (
-      error.response &&
-      (error.response.status === 401 || error.response.status === 403)
-    ) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem('token');
       window.location.href = '/login';
     }

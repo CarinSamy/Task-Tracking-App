@@ -35,7 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       estimate_hours: {
         type: DataTypes.DECIMAL(5, 2),
       },
-      created_at: {
+      logged_hours: {
+        type: DataTypes.DECIMAL(5, 2),
+        defaultValue: 0.0,
+},
+      createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
